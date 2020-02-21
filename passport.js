@@ -58,44 +58,26 @@ const request = (url) => {
  * Sign in with Passport.
  */
 const signInWithPassport = () => {
-    const popup = window.open(buildURL(PASSPORT_SUBDOMAIN), "_blank", "height=600,width=600");
+    return new Promise((resolve, reject) => {
+        const popup = window.open(buildURL(PASSPORT_SUBDOMAIN), "_blank", "height=600,width=600");
 
-    let timer = window.setInterval(() => {
-        if (popup.closed) {
-            clearInterval(timer);
+        let timer = window.setInterval(() => {
+            if (popup.closed) {
+                clearInterval(timer);
 
-            request(buildURL(API_SUBDOMAIN, "/accounts/verify"))
-                .then(res => res.json())
-                .then(res => {
-                    if (res.username) {
-                        // eslint-disable-next-line no-undef
-                        if (typeof onPassportSignin !== "undefined" && onPassportSignin instanceof Function) {
-                            // eslint-disable-next-line no-undef
-                            onPassportSignIn(res);
+                request(buildURL(API_SUBDOMAIN, "/accounts/verify"))
+                    .then(res => res.json())
+                    .then(res => {
+                        if (res.username) {
+                            resolve(res);
                         } else {
-                            throw new Error("PassportError: onPassportSignIn function wasn't declared to handle the signin event.");
+                            reject(res);
                         }
-                    } else {
-                        // eslint-disable-next-line no-undef
-                        if (typeof onPassportError !== "undefined" && onPassportError instanceof Function) {
-                            // eslint-disable-next-line no-undef
-                            onPassportError(res);
-                        } else {
-                            throw new Error("PassportError: onPassportError function wasn't declared to handle the error event.");
-                        }
-                    }
-                })
-                .catch(err => {
-                    // eslint-disable-next-line no-undef
-                    if (typeof onPassportRequestError !== "undefined" && onPassportRequestError instanceof Function) {
-                        // eslint-disable-next-line no-undef
-                        onPassportRequestError(err);
-                    } else {
-                        throw new Error("PassportError: onPassportRequestError function wasn't declared to handle the error event.");
-                    }
-                });
-        }
-    }, 1000);
+                    })
+                    .catch(reject);
+            }
+        }, 1000);
+    });
 };
 
 /**
