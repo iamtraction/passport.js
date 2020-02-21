@@ -1,0 +1,23 @@
+{
+  "name": "passport.traction",
+  "version": "1.0.0",
+  "description": "Client library for Extraction Passport.",
+  "homepage": "https://passport.traction.one",
+  "bugs": {
+    "url": "https://github.com/k3rn31p4nic/passport.js/issues"
+  },
+  "main": "./passport.js",
+  "repository": "https://github.com/k3rn31p4nic/passport.js.git",
+  "author": "Sankarsan Kampa",
+  "license": "MIT",
+  "private": false,
+  "scripts": {
+    "lint": "./node_modules/.bin/eslint .",
+    "build": "./node_modules/.bin/terser --compress --mangle -o ./passport.min.js -- ./passport.js",
+    "test": "yarn lint"
+  },
+  "devDependencies": {
+    "eslint": "^6.8.0",
+    "terser": "^4.6.3"
+  }
+}
